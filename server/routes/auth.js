@@ -69,4 +69,29 @@ router.post("/logout", (req, res) => {
   res.json({ message: "Logged out successfully" });
 })
 
+router.get("/profile", (req, res) => {
+  const token = req.cookies.token; // Read token from cookies
+  if (!token) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    db.query(
+      "SELECT id, username, email FROM users WHERE id = ?",
+      [decoded.id],
+      (err, results) => {
+        if (err) return res.status(500).json({ error: "Database error" });
+        if (results.length === 0)
+          return res.status(404).json({ error: "User not found" });
+
+        res.json(results[0]); // Return user data
+      }
+    );
+  } catch (error) {
+    res.status(401).json({ error: "Invalid token" });
+  }
+});
+
+
 export default router;
