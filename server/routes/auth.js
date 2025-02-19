@@ -30,7 +30,7 @@ router.post("/login", (req, res) => {
     "SELECT * FROM users WHERE email = ?",
     [email],
     async (err, result) => {
-      if (err) return res.status(500).json({ error: "Server Error" });
+      if (err) return res.status(500).json(err);
       if (result.length === 0)
         return res.status(400).json({ error: "User not found" });
 
@@ -45,8 +45,8 @@ router.post("/login", (req, res) => {
 
       res.cookie("token", token, {
         httpOnly: true,  // Prevents JavaScript access
-        secure: true, // Use true in production (HTTPS required)
-        sameSite: "strict",  // CSRF protection
+        secure: false, // Use true in production (HTTPS required)
+        sameSite: "Strict",  // CSRF protection
         maxAge: 3600000,  // 1 hour
       });
 
@@ -59,5 +59,14 @@ router.post("/login", (req, res) => {
     }
   );
 });
+
+router.post("/logout", (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "Strict",
+  });
+  res.json({ message: "Logged out successfully" });
+})
 
 export default router;
