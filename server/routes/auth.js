@@ -2,8 +2,10 @@ import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import db from "../config/db.js";
+import cookieParser from "cookie-parser";
 
 const router = express.Router();
+router.use(cookieParser());
 
 // Register User
 router.post("/register", async (req, res) => {
@@ -28,7 +30,7 @@ router.post("/login", (req, res) => {
     "SELECT * FROM users WHERE email = ?",
     [email],
     async (err, result) => {
-      if (err) return res.status(500).json(err);
+      if (err) return res.status(500).json({ error: "Server Error" });
       if (result.length === 0)
         return res.status(400).json({ error: "User not found" });
 
@@ -40,10 +42,20 @@ router.post("/login", (req, res) => {
       const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
         expiresIn: "1h",
       });
-      res.json({
-        token,
-        user: { id: user.id, username: user.username, email: user.email },
+
+      res.cookie("token", token, {
+        httpOnly: true,  // Prevents JavaScript access
+        secure: true, // Use true in production (HTTPS required)
+        sameSite: "strict",  // CSRF protection
+        maxAge: 3600000,  // 1 hour
       });
+
+      res.json({ message: "Login Successful" });
+
+      // res.json({
+      //   token,
+      //   user: { id: user.id, username: user.username, email: user.email },
+      // });
     }
   );
 });
