@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    await axios.get(
+    await axios.post(
       "http://localhost:8081/auth/logout",
       {},
       { withCredentials: true }
@@ -35,3 +35,6 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+
+export default AuthContext;

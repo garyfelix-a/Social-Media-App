@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { TextField, Button, Container, Typography } from "@mui/material";
+import { TextField, Button, Container, Typography, Box } from "@mui/material";
 import { registerUser } from "../services/api.js";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -26,6 +26,7 @@ const Register = () => {
         <TextField
           label="username"
           fullWidth
+          margin="normal"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
@@ -33,6 +34,7 @@ const Register = () => {
           label="email"
           type="email"
           fullWidth
+          margin="normal"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -40,6 +42,7 @@ const Register = () => {
           label="password"
           type="password"
           fullWidth
+          margin="normal"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
@@ -47,6 +50,14 @@ const Register = () => {
           Register
         </Button>
       </form>
+      <Box mt={2} textAlign="center">
+        <Typography variant="body1">
+          Already have an account?{" "}
+          <Link to="/login" style={{ textDecoration: "none", color: "blue" }}>
+            Login
+          </Link>
+        </Typography>
+      </Box>
     </Container>
   );
 };
