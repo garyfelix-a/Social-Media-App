@@ -60,11 +60,16 @@ router.post("/login", (req, res) => {
   );
 });
 
+//Logout user
 router.post("/logout", (req, res) => {
+  if(!req.cookies.token){
+    return res.status(400).json({ message: "No token found" });
+  }
+
   res.clearCookie("token", {
     httpOnly: true,
     secure: false,
-    sameSite: "Strict",
+    sameSite: "Lax",
   });
   res.json({ message: "Logged out successfully" });
 })
