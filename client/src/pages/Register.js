@@ -1,35 +1,37 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { TextField, Button, Container, Typography } from "@mui/material";
-import { getProfile, loginUser } from "../services/api";
+import { registerUser } from "../services/api.js";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Register = () => {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => {
-    getProfile()
-    .then(() => navigate("/feed"))
-    .catch(() => {});
-  }, []);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await loginUser({ email, password });
-      navigate("/feed");
+      await registerUser({ username, email, password });
+      navigate("/login");
     } catch (error) {
-      console.error("Login Failed", error);
+      console.error("Registration failed", error);
     }
   };
 
   return (
     <Container maxWidth="xs">
-      <Typography variant="h4">Login</Typography>
+      <Typography variant="h4">Register</Typography>
       <form onSubmit={handleSubmit}>
         <TextField
-          label="Email"
+          label="username"
+          fullWidth
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <TextField
+          label="email"
+          type="email"
           fullWidth
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -42,11 +44,11 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
         <Button type="submit" variant="contained" fullWidth>
-          Login
+          Register
         </Button>
       </form>
     </Container>
   );
 };
 
-export default Login;
+export default Register;
