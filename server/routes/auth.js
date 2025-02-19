@@ -69,6 +69,7 @@ router.post("/logout", (req, res) => {
   res.json({ message: "Logged out successfully" });
 })
 
+//fetches user details from the database
 router.get("/profile", (req, res) => {
   const token = req.cookies.token; // Read token from cookies
   if (!token) {
@@ -93,5 +94,18 @@ router.get("/profile", (req, res) => {
   }
 });
 
+//to check if user is authenticated or not
+router.get("/me", (req, res) => {
+  const token = req.cookies.token; // Get token from cookies
+
+  if (!token) return res.status(401).json({ error: "Unauthorized" });
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify token
+    res.json({ user: { id: decoded.id } }); // Return user info (can add more)
+  } catch (error) {
+    res.status(401).json({ error: "Invalid token" });
+  }
+});
 
 export default router;
