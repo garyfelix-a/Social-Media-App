@@ -21,7 +21,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route element={<ProtectedRoute />}>
-            <Route path="/feed" element={<><Navbar /><Feed /></>} />
+            <Route path="/feed" element={<><Navbar /><Feed userId={1} /></>} />
           </Route>
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
