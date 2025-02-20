@@ -110,7 +110,7 @@ const Feed = ({ userId }) => {
             <CardMedia
               component="img"
               height="200"
-              image={post.image.url}
+              image={post.image_url}
               alt="Post image"
             />
             <CardContent>
