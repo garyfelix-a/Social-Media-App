@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     await axios.post(
-      "http://localhost:8081/auth/logout",
+      "http://localhost:8081/api/auth/logout",
       {},
       { withCredentials: true }
     );

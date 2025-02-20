@@ -34,6 +34,28 @@ router.get("/", (req, res) => {
   });
 });
 
+//Get posts from followed users
+router.get("/:user_id", (req, res) => {
+  const { user_id } = req.params;
+
+  const query = `
+    SELECT p.id, p.content, p.image_url, u.username, 
+      (SELECT COUNT(*) FROM likes WHERE post_id = p.id) AS total_likes,
+      (SELECT COUNT(*) FROM comments WHERE post_id = p.id) AS total_comments
+    FROM posts p
+    JOIN users u ON p.user_id = u.id
+    WHERE p.user_id IN (SELECT following_id FROM follows WHERE follower_id = ?)
+    ORDER BY p.id DESC;
+  `;
+
+  db.query(query, [user_id],
+    (err, results) => {
+      if (err) return res.status(500).json({ error: "Server Error" });
+      res.json(results);
+    }
+  );
+});
+
 //delete a post
 router.delete("/:post_id", (req, res) => {
   const { post_id } = req.params;
@@ -61,5 +83,3 @@ router.delete("/:post_id", (req, res) => {
 });
 
 export default router;
-
-

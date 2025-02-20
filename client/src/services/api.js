@@ -19,7 +19,7 @@ export const loginUser = async (userData) => {
 
 //logout user
 export const logoutUser = async () => {
-    return await API.post("/logout");
+    return await API.get("/logout");
 };
 
 //get user profile
