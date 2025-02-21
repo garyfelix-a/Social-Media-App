@@ -1,0 +1,33 @@
+.main-feed{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.suggested-users{
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    align-items: center;
+    padding: 20px 10px;
+    overflow: hidden;
+}
+
+.follow-btn{
+    border: 2px solid black !important;
+    margin-top: 10px !important;
+    width: 100% ;
+    /* margin-bottom: 10px; */
+}
+
+.post-section{
+}
+
+.comment-popup{
+    border: 2px solid red !important;
+}

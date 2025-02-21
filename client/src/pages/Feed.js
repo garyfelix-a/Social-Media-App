@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import "./Feed.css";
 import {
   fetchPosts,
   likePost,
@@ -6,7 +7,8 @@ import {
   fetchComments,
   addComment,
   fetchSuggestedUsers,
-  followUser,getFollow
+  followUser,
+  getFollow,
 } from "../services/api.js";
 import {
   Card,
@@ -22,11 +24,14 @@ import {
   DialogActions,
   TextField,
 } from "@mui/material";
-import { Favorite, FavoriteBorder, ChatBubbleOutline } from "@mui/icons-material";
+import {
+  Favorite,
+  FavoriteBorder,
+  ChatBubbleOutline,
+} from "@mui/icons-material";
 import AuthContext from "../context/AuthContext.js";
 
 const Feed = () => {
-
   let { getLoginUser } = useContext(AuthContext);
 
   let userId = getLoginUser();
@@ -90,8 +95,6 @@ const Feed = () => {
 
   useEffect(() => {
     if (!userId) return; // ✅ Prevents execution if `userId` is null
-  
-    
     const fetchData = async () => {
       try {
         let data = [];
@@ -99,11 +102,11 @@ const Feed = () => {
         getFollowData.data.forEach((follow) => {
           data.push(follow.id);
         });
-  
+
         data = [userId, ...data];
-  
+
         var payload = data.map((data) => fetchPosts(data, userId));
-  
+
         let finalData = [];
         await Promise.all(payload)
           .then((results) => {
@@ -113,8 +116,10 @@ const Feed = () => {
               }
             });
           })
-          .catch((error) => console.error("❌ One of the promises failed:", error));
-  
+          .catch((error) =>
+            console.error("❌ One of the promises failed:", error)
+          );
+
         setPosts(finalData);
         const suggestedRes = await fetchSuggestedUsers(userId);
         setSuggestedUsers(suggestedRes.data);
@@ -122,10 +127,9 @@ const Feed = () => {
         console.error("❌ Error fetching data:", error);
       }
     };
-  
+
     fetchData();
   }, [userId]); // ✅ Only runs if `userId` is not null
-  
 
   // ✅ Handle Like/Unlike
   const handleLike = async (postId, isLiked) => {
@@ -143,7 +147,9 @@ const Feed = () => {
             ? {
                 ...post,
                 liked: !isLiked,
-                total_likes: isLiked ? post.total_likes - 1 : post.total_likes + 1,
+                total_likes: isLiked
+                  ? post.total_likes - 1
+                  : post.total_likes + 1,
               }
             : post
         )
@@ -213,17 +219,18 @@ const Feed = () => {
   };
 
   return (
-    <div>
-      <Typography variant="h4" align="center">
-        Social Media Feed
-      </Typography>
-
+    <div className="main-feed">
       {/* Suggested Users Section */}
-      {suggestedUsers!==undefined && suggestedUsers.length > 0 && (
-        <div>
-          <Typography variant="h6">Follow People</Typography>
+      {suggestedUsers !== undefined && suggestedUsers.length > 0 && (
+        <div className="suggested-users">
+          <Typography variant="h5">Suggested People</Typography>
           {suggestedUsers.map((user) => (
-            <Button key={user.id} onClick={() => handleFollow(user.id)}>
+            <Button
+              className="follow-btn"
+              color="inherit"
+              key={user.id}
+              onClick={() => handleFollow(user.id)}
+            >
               Follow {user.username}
             </Button>
           ))}
@@ -231,39 +238,47 @@ const Feed = () => {
       )}
 
       {/* Posts Section */}
-      {posts.length === 0 ? (
-        <Typography variant="h6" align="center">
-          No posts available. Follow people to see posts.
-        </Typography>
-      ) : (
-        posts.map((post) => (
-          <Card key={post.id} sx={{ margin: "20px", padding: "10px" }}>
-            <Typography variant="h6">{post.username}</Typography>
-            <CardMedia
-              component="img"
-              height="200"
-              image={post.image_url}
-              alt="Post image"
-            />
-            <CardContent>
-              <Typography variant="body2">{post.content}</Typography>
-            </CardContent>
-            <CardActions>
-              {/* Like Button */}
-              <IconButton onClick={() => handleLike(post.id, post.liked)}>
-                {post.liked ? <Favorite color="error" /> : <FavoriteBorder />}
-              </IconButton>
-              <Typography>{post.total_likes}</Typography>
+      <div className="post-section">
+        {posts.length === 0 ? (
+          <Typography variant="h6" align="center">
+            No posts available. Follow people to see posts.
+          </Typography>
+        ) : (
+          posts.map((post) => (
+            <Card
+              key={post.id}
+              sx={{ margin: "20px", padding: "10px" }}
+              className="feed-card"
+            >
+              <Typography variant="h6">{post.username}</Typography>
+              <CardMedia
+                component="img"
+                height="200"
+                image={post.image_url}
+                alt="Post image"
+              />
+              <CardContent>
+                <Typography variant="body2">
+                  {post.username} : {post.content}
+                </Typography>
+              </CardContent>
+              <CardActions>
+                {/* Like Button */}
+                <IconButton onClick={() => handleLike(post.id, post.liked)}>
+                  {post.liked ? <Favorite color="error" /> : <FavoriteBorder />}
+                </IconButton>
+                <Typography>{post.total_likes}</Typography>
 
-              {/* Comment Button */}
-              <IconButton onClick={() => handleOpenComments(post.id)}>
-                <ChatBubbleOutline />
-              </IconButton>
-              <Typography>{post.total_comments}</Typography>
-            </CardActions>
-          </Card>
-        ))
-      )}
+                {/* Comment Button */}
+                <IconButton onClick={() => handleOpenComments(post.id)}>
+                  <ChatBubbleOutline />
+                </IconButton>
+                <Typography>{post.total_comments}</Typography>
+              </CardActions>
+            </Card>
+          ))
+        )}
+      </div>
 
       {/* Comments Popup */}
       <Dialog open={Boolean(selectedPost)} onClose={handleCloseComments}>

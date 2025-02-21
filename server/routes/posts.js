@@ -1,18 +1,29 @@
 import express from "express";
 import db from "../config/db.js";
+import multer from "multer";
 
 const router = express.Router();
 
+const storage = multer.diskStorage({
+  destination: "./uploads/",
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-"+file.originalname);
+  },
+});
+
+const upload = multer({ storage });
+
 // Create a new post
-router.post("/create", (req, res) => {
-  const { user_id, content, image_url } = req.body;
+router.post("/create", upload.single("image"), (req, res) => {
+  const { user_id, content } = req.body;
+  const image_url = `/uploads/${req.file.filename}`;
 
   db.query(
     "INSERT INTO posts (user_id, content, image_url) VALUES (?, ?, ?)",
     [user_id, content, image_url],
     (err, result) => {
       if (err) return res.status(500).json({ error: "Server error" });
-      res.json({ message: "Post created successfully" });
+      res.json({ postId: result.insertId, image_url});
     }
   );
 });

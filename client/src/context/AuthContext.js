@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -35,12 +35,19 @@ export const AuthProvider = ({ children }) => {
 
   const login = (userData) => {
     setUser(userData);
-    // window.location.reload();
   };
 
   const getLoginUser = () => {
     return user ? user.id : null;
   }
+
+  // const getLoginUser = () => {
+  //   return JSON.parse(localStorage.getItem("user")) || null;
+  // };
+
+  // useEffect(() => {
+  //   setUser(getLoginUser());
+  // }, []);
 
   const logout = async () => {
     await axios.post(

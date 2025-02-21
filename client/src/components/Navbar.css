@@ -1,0 +1,53 @@
+/* Navbar.css */
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Dosis:wght@200..800&family=Monomakh&display=swap");
+
+.navbar {
+  background-color: #000; /* Instagram-like black navbar */
+  box-shadow: none; /* Remove shadow for a clean look */
+  position: fixed !important;
+  left: 0 !important;
+  width: 20% !important;
+  height: 100vh !important;
+  background-image: linear-gradient(to top, #000000, #0d0005, #13000e, #150017, #130020, #130020, #130020, #130020, #150017, #13000e, #0d0005, #000000) !important;
+}
+
+.navbar-toolbar {
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar-logo {
+  font-weight: bold;
+  font-size: 30px !important;
+  margin-top: 20px !important;
+}
+
+.navbar-link {
+  text-decoration: none;
+  color: white;
+}
+
+.navbar-buttons {
+  display: flex;
+  margin-top: 20px;
+  flex-direction: column;
+  width: 100%;
+  gap: 15px; /* Space between buttons */
+}
+
+.navbar-buttons .nav-btn {
+  text-transform: capitalize;
+  border-radius: 5px;
+  font-family: "Monomakh", serif;
+  font-weight: 400;
+  font-style: normal;
+  border-bottom: 4px solid white;
+  border-right: 4px solid white;
+  border-left: 1px solid gray;
+  border-top: 1px solid gray;
+  margin-bottom: 20px;
+  /* border-left: transparent; */
+  padding: 10px 0px;
+  /* border: 2px solid red; */
+  width: 100%;
+}

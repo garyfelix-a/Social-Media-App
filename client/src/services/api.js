@@ -81,3 +81,9 @@ export const followUser = async (followerId, followingId) => {
 export const getFollow = async (useId) => {
   return await API.get(`/follows/${useId}`);
 };
+
+export const createPost = async (formData) => {
+  return await API.post("posts/create/", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};
