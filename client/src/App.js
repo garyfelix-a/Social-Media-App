@@ -10,8 +10,9 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Feed from "./pages/Feed";
-import { AuthProvider } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
+import { AuthProvider } from "./context/AuthContext";
+// import CreatePost from "./pages/CreatePost";
 
 function App() {
   return (
@@ -21,7 +22,19 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route element={<ProtectedRoute />}>
-            <Route path="/feed" element={<><Navbar /><Feed userId={1} /></>} />
+            {/* <Route
+              path="/create-post"
+              element={<CreatePost setPosts={setPosts} />}
+            /> */}
+            <Route
+              path="/feed"
+              element={
+                <>
+                  <Navbar />
+                  <Feed />
+                </>
+              }
+            />
           </Route>
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>

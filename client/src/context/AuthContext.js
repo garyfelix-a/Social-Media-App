@@ -8,16 +8,39 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
+  // useEffect(() => {
+  //   axios
+  //     .get("http://localhost:8081/api/auth/me", { withCredentials: true })
+  //     .then((response) => setUser(response.data.user))
+  //     .catch(() => setUser(null));
+  // }, []);
+
   useEffect(() => {
-    axios
-      .get("http://localhost:8081/auth/me", { withCredentials: true })
-      .then((response) => setUser(response.data.user))
-      .catch(() => setUser(null));
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get("http://localhost:8081/api/auth/me", {
+          withCredentials: true,
+        });
+        setUser(response.data.user); // ✅ Update state only if necessary
+      } catch (error) {
+        setUser(null);
+        console.log(error);
+      }
+    };
+  
+    fetchUser();
   }, []);
+
+  console.log("user :",user);
 
   const login = (userData) => {
     setUser(userData);
+    // window.location.reload();
   };
+
+  const getLoginUser = () => {
+    return user ? user.id : null;
+  }
 
   const logout = async () => {
     await axios.post(
@@ -30,7 +53,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, getLoginUser, logout }}>
       {children}
     </AuthContext.Provider>
   );

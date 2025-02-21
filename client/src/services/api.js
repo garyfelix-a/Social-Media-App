@@ -32,18 +32,22 @@ export const getProfile = async () => {
 //POST ENDPOINTS
 
 //Fetch posts of followed users
-export const fetchPosts = async (userId) => {
-  return await API.get(`posts/${userId}`);
+export const fetchPosts = async (userId,own_id) => {
+  return await API.get(`posts/${userId}/${own_id}`);
 };
 
 //Like a post
+
 export const likePost = async (postId, userId) => {
-  return await API.post(`likes/${postId}/${userId}`);
+  return await API.post(`/likes`, { post_id: postId, user_id: userId });
 };
+
 
 //Unlike a post
 export const unlikePost = async (postId, userId) => {
-  return await API.delete(`likes/${postId}/${userId}`);
+  return await API.delete("/likes", {
+    data: { post_id: postId, user_id: userId }, // Send data in the request body for DELETE
+  });
 };
 
 //Fetch comments for a post
@@ -72,4 +76,8 @@ export const fetchSuggestedUsers = async (userId) => {
 
 export const followUser = async (followerId, followingId) => {
   return await API.post(`/follows`, { follower_id: followerId, following_id: followingId });
+};
+
+export const getFollow = async (useId) => {
+  return await API.get(`/follows/${useId}`);
 };

@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Post a comment
 router.post("/add", (req, res) => {
-  const { post_id, user_id, comment } = req.body;
+  const { postId, userId, comment } = req.body;
 
   // Ensure comment text is provided
   if (!comment) {
@@ -14,7 +14,7 @@ router.post("/add", (req, res) => {
 
   db.query(
     "INSERT INTO comments (post_id, user_id, comment) VALUES (?, ?, ?)", // ✅ Fixed here
-    [post_id, user_id, comment],
+    [postId, userId, comment],
     (err, result) => {
       if (err) return res.status(500).json({ error: "Server Error" });
       res.json({ message: "Comment added", commentId: result.insertId });
