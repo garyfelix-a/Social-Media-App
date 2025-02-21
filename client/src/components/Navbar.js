@@ -7,6 +7,7 @@ const Navbar = () => {
   const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  // Logout function to navigate to login page and clear user data from context
   const handleLogout = async () => {
     try {
       await logout();
@@ -19,15 +20,12 @@ const Navbar = () => {
   return (
     <AppBar position="static" className="navbar">
       <Toolbar className="navbar-toolbar">
-        {/* Social Feed Logo */}
-        {/* <img src={logo} alt="logo" style={{width: "300px", height: "auto"}}/> */}
         <Typography variant="h6" className="navbar-logo">
           <Link to="/feed" className="navbar-link">
             Social Feed
           </Link>
         </Typography>
 
-        {/* Navbar buttons (aligned left) */}
         <Box className="navbar-buttons">
           <Button className="nav-btn"  color="inherit" component={Link} to="/profile">
             Profile
@@ -41,26 +39,6 @@ const Navbar = () => {
         </Box>
       </Toolbar>
     </AppBar>
-    // <AppBar position="static" className="navbar">
-    //   <Toolbar className="navbar-toolbar">
-    //     <Typography variant="h6" className="navbar-logo" sx={{ flexGrow: 1 }}>
-    //       <Link to="/feed" style={{ textDecoration: "none", color: "white" }}>
-    //         Social Feed
-    //       </Link>
-    //     </Typography>
-
-    //     {/* Navbar buttons */}
-    //     <Button color="inherit" component={Link} to="/profile">
-    //       Profile
-    //     </Button>
-    //     <Button color="inherit" to="/add-post">
-    //       Add Post
-    //     </Button>
-    //     <Button color="inherit" onClick={handleLogout}>
-    //       Logout
-    //     </Button>
-    //   </Toolbar>
-    // </AppBar>
   );
 };
 

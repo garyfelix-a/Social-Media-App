@@ -10,11 +10,12 @@ const Register = () => {
   const navigate = useNavigate();
   const [errors, setErrors] = useState({ username: "", email: "", password: "" });
 
+  // Register Form Validation
   const validateForm = () => {
     let newErrors = { username: "", email: "", password: "" };
     let isValid = true;
 
-    // ✅ Username Validation (Instagram Style)
+    // Username Validation 
     if (!username.trim()) {
       newErrors.username = "Username is required";
       isValid = false;
@@ -27,7 +28,7 @@ const Register = () => {
       isValid = false;
     }
 
-    // ✅ Email Validation
+    // Email Validation
     if (!email.trim()) {
       newErrors.email = "Email is required";
       isValid = false;
@@ -36,7 +37,7 @@ const Register = () => {
       isValid = false;
     }
 
-    // ✅ Password Validation (Instagram Style)
+    // Password Validation 
     if (!password.trim()) {
       newErrors.password = "Password is required";
       isValid = false;
@@ -52,6 +53,7 @@ const Register = () => {
     return isValid;
   };
 
+  // Handle Form Submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -77,12 +79,12 @@ const Register = () => {
             error={!!errors.username}
             helperText={errors.username}
             sx={{
-              input: { color: "white" }, // Text color inside input
-              label: { color: "white" }, // Label color
+              input: { color: "white" }, 
+              label: { color: "white" }, 
               "& .MuiOutlinedInput-root": {
-                "& fieldset": { borderColor: "white" }, // Border color
-                "&:hover fieldset": { borderColor: "lightgray" }, // Hover effect
-                "&.Mui-focused fieldset": { borderColor: "white" }, // Focus effect
+                "& fieldset": { borderColor: "white" }, 
+                "&:hover fieldset": { borderColor: "lightgray" },
+                "&.Mui-focused fieldset": { borderColor: "white" },
               },
             }}
             autoComplete="off"
@@ -98,12 +100,12 @@ const Register = () => {
             error={!!errors.email}
             helperText={errors.email}
             sx={{
-              input: { color: "white" }, // Text color inside input
-              label: { color: "white" }, // Label color
+              input: { color: "white" },  
+              label: { color: "white" }, 
               "& .MuiOutlinedInput-root": {
-                "& fieldset": { borderColor: "white" }, // Border color
-                "&:hover fieldset": { borderColor: "lightgray" }, // Hover effect
-                "&.Mui-focused fieldset": { borderColor: "white" }, // Focus effect
+                "& fieldset": { borderColor: "white" }, 
+                "&:hover fieldset": { borderColor: "lightgray" }, 
+                "&.Mui-focused fieldset": { borderColor: "white" }, 
               },
             }}
             autoComplete="off"
@@ -119,12 +121,12 @@ const Register = () => {
             error={!!errors.password}
             helperText={errors.password}
             sx={{
-              input: { color: "white" }, // Text color inside input
-              label: { color: "white" }, // Label color
+              input: { color: "white" }, 
+              label: { color: "white" }, 
               "& .MuiOutlinedInput-root": {
-                "& fieldset": { borderColor: "white" }, // Border color
-                "&:hover fieldset": { borderColor: "lightgray" }, // Hover effect
-                "&.Mui-focused fieldset": { borderColor: "white" }, // Focus effect
+                "& fieldset": { borderColor: "white" }, 
+                "&:hover fieldset": { borderColor: "lightgray" }, 
+                "&.Mui-focused fieldset": { borderColor: "white" }, 
               },
             }}
             autoComplete="off"

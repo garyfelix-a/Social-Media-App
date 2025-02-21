@@ -1,11 +1,10 @@
 import axios from "axios";
 
+//Base url
 const API = axios.create({
   baseURL: "http://localhost:8081/api/",
   withCredentials: true,
 });
-
-// const API_URL = "http://localhost:8081/api";
 
 //AUTH ENDPOINTS
 
@@ -28,8 +27,6 @@ export const logoutUser = async () => {
 export const getProfile = async () => {
   return await API.get("/auth/profile");
 };
-
-//POST ENDPOINTS
 
 //Fetch posts of followed users
 export const fetchPosts = async (userId,own_id) => {
@@ -70,18 +67,16 @@ export const fetchSuggestedUsers = async (userId) => {
 };
 
 //Follow a user
-// export const followUser = async (followerId, followingId) => {
-//   return await API.post(`follows/${followerId}/${followingId}`);
-// };
-
 export const followUser = async (followerId, followingId) => {
   return await API.post(`/follows`, { follower_id: followerId, following_id: followingId });
 };
 
+//Get followed users
 export const getFollow = async (useId) => {
   return await API.get(`/follows/${useId}`);
 };
 
+//Create a new post
 export const createPost = async (formData) => {
   return await API.post("posts/create/", formData, {
     headers: { "Content-Type": "multipart/form-data" },

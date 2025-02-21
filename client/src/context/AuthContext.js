@@ -8,20 +8,14 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   axios
-  //     .get("http://localhost:8081/api/auth/me", { withCredentials: true })
-  //     .then((response) => setUser(response.data.user))
-  //     .catch(() => setUser(null));
-  // }, []);
-
+  // Fetch user on component mount and update when user is logged in or out.
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const response = await axios.get("http://localhost:8081/api/auth/me", {
           withCredentials: true,
         });
-        setUser(response.data.user); // ✅ Update state only if necessary
+        setUser(response.data.user); 
       } catch (error) {
         setUser(null);
         console.log(error);
@@ -33,22 +27,17 @@ export const AuthProvider = ({ children }) => {
 
   console.log("user :",user);
 
+  // Login user
   const login = (userData) => {
     setUser(userData);
   };
 
+  // Get the logged in user ID. Returns null if no user is logged in.
   const getLoginUser = () => {
     return user ? user.id : null;
   }
 
-  // const getLoginUser = () => {
-  //   return JSON.parse(localStorage.getItem("user")) || null;
-  // };
-
-  // useEffect(() => {
-  //   setUser(getLoginUser());
-  // }, []);
-
+  // Logout user
   const logout = async () => {
     await axios.post(
       "http://localhost:8081/api/auth/logout",
@@ -60,6 +49,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
+    // Provide the AuthContext with the current user state and the functions to interact with it.
     <AuthContext.Provider value={{ user, login, getLoginUser, logout }}>
       {children}
     </AuthContext.Provider>

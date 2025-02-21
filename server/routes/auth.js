@@ -51,11 +51,6 @@ router.post("/login", (req, res) => {
       });
 
       res.json({ message: "Login Successful" });
-
-      // res.json({
-      //   token,
-      //   user: { id: user.id, username: user.username, email: user.email },
-      // });
     }
   );
 });
@@ -107,7 +102,7 @@ router.get("/me", (req, res) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify token
-    res.json({ user: { id: decoded.id } }); // Return user info (can add more)
+    res.json({ user: { id: decoded.id } }); // Return user info 
   } catch (error) {
     res.status(401).json({ error: "Invalid token" });
   }

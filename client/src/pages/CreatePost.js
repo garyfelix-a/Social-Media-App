@@ -8,15 +8,10 @@ import './CreatePost.css';
 const CreatePost = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-  // const [posts, setPosts] = useState([]);
-  // const [formData, setFormData] = useState({});
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
 
-  // const handleImageChange = (event) => {
-  //   setImage(event.target.files[0]);
-  // };
-
+  // Handle image changes when user uploads a new image
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       setImage(e.target.files[0]);
@@ -24,46 +19,11 @@ const CreatePost = () => {
   };
 
   let userId = user.id;
-  console.log("create post user id: ", userId);
 
-  //  useEffect(() => {
-  //     if (!userId) return; // ✅ Prevents execution if `userId` is null
-  //     const fetchData = async () => {
-  //       try {
-  //         let data = [];
-  //         const getFollowData = await getFollow(userId);
-  //         getFollowData.data.forEach((follow) => {
-  //           data.push(follow.id);
-  //         });
-
-  //         data = [userId, ...data];
-
-  //         var payload = data.map((data) => fetchPosts(data, userId));
-
-  //         let finalData = [];
-  //         await Promise.all(payload)
-  //           .then((results) => {
-  //             results.forEach((result) => {
-  //               if (result.data.length > 0) {
-  //                 finalData = [...finalData, ...result.data];
-  //               }
-  //             });
-  //           })
-  //           .catch((error) =>
-  //             console.error("❌ One of the promises failed:", error)
-  //           );
-
-  //         setPosts(finalData);
-  //       } catch (error) {
-  //         console.error("❌ Error fetching data:", error);
-  //       }
-  //     };
-
-  //     fetchData();
-  //   }, [userId]);
-
+  // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
+    //if no content or image is uploaded, then send alert message
     if (!content || !image) {
       alert("Please add an image and some content!");
       return;
@@ -78,6 +38,7 @@ const CreatePost = () => {
       formData.append("image", image);
     }
 
+    // Send the post request to the server
     try {
       const response = await createPost(formData);
       console.log("Post created successfully:", response.data);
@@ -87,50 +48,40 @@ const CreatePost = () => {
     } catch (error) {
       console.error("Error creating post:", error);
     }
-
-    // try {
-    //   const response = await createPost(formData);
-
-    //   // 🆕 New post object
-    //   const newPost = {
-    //     id: response.data.postId,
-    //     username: user.username,
-    //     content,
-    //     image_url: response.data.image_url,
-    //     liked: false,
-    //     total_likes: 0,
-    //     total_comments: 0,
-    //   };
-
-    //   setFormData(newPost);
-
-    //   setPosts((prevPosts) => [newPost, ...prevPosts]);
-
-    //   navigate("/feed");
-    // } catch (error) {
-    //   console.error("❌ Error creating post:", error);
-    // }
   };
 
   return (
-    <div className="create-post">
-      <Box sx={{ maxWidth: 500, margin: "auto", padding: 2 }}>
-        <Typography variant="h5">Create a New Post</Typography>
+    <div className="create-post-main">
+      <Box className="create-posts" sx={{ maxWidth: 500, margin: "auto", padding: 2 }}>
+        <Typography variant="h5" style={{color: "white"}}>Create a New Post</Typography>
 
-        <form onSubmit={handleSubmit}>
-          <input type="file" accept="image/*" onChange={handleImageChange} />
+        <form onSubmit={handleSubmit} className="create-post-form">
+          <div style={{display: "flex", justifyContent: "space-between", width: "100%"}}>
+          <Typography style={{color: "white"}}>Upload Photo :</Typography>
+          <input style={{color: "white"}} type="file" accept="image/*" onChange={handleImageChange} />
+          </div>
 
           <TextField
+          className="post-content-input"
             label="Post Content"
             multiline
             rows={3}
             fullWidth
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            sx={{ marginTop: 2 }}
+            sx={{ 
+              label: { color: "white" }, 
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": { borderColor: "white" }, 
+                "&:hover fieldset": { borderColor: "lightgray" }, 
+                "&.Mui-focused fieldset": { borderColor: "white" },
+              },
+            }}
+            autoComplete="off"
+            required
           />
 
-          <Button type="submit" variant="contained" sx={{ marginTop: 2 }}>
+          <Button className="post-btn" type="submit" variant="contained" sx={{ marginTop: 2 }}>
             Post
           </Button>
         </form>

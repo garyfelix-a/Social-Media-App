@@ -44,57 +44,9 @@ const Feed = () => {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
 
-  // 🔥 Fetch Posts & Suggested Users on Load
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-
-  //       var data = []
-  //       const getFollowData = await getFollow(userId);
-  //       getFollowData.data.forEach(follow => {
-  //         data.push(follow.id);
-  //       });
-
-  //       data = [userId, ...data];
-  //       console.log(data);
-
-  //       var payload = data.map((data) =>{
-  //           return fetchPosts(data,userId);
-  //       });
-
-  //       console.log(payload);
-
-  //       let finalData = [];
-
-  //       await Promise.all(payload).then((results) => {
-  //         console.log("🎉 All tasks completed:", results);
-  //         if(results.length > 0){
-
-  //           results.forEach((result) => {
-  //             if(result.data.length > 0){
-  //               finalData = [...finalData,...result.data];
-  //             }
-  //           })
-
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.error("❌ One of the promises failed:", error);
-  //       });
-  //       console.log("finalData",finalData);
-  //       setPosts(finalData);
-
-  //       const suggestedRes = await fetchSuggestedUsers(userId);
-  //       setSuggestedUsers(suggestedRes.data);
-  //     } catch (error) {
-  //       console.error("❌ Error fetching data:", error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, [userId]);
-
+  // Fetch posts and suggested users on load
   useEffect(() => {
-    if (!userId) return; // ✅ Prevents execution if `userId` is null
+    if (!userId) return; 
     const fetchData = async () => {
       try {
         let data = [];
@@ -108,6 +60,7 @@ const Feed = () => {
         var payload = data.map((data) => fetchPosts(data, userId));
 
         let finalData = [];
+        // Fetch posts concurrently and combine them together into a single payload
         await Promise.all(payload)
           .then((results) => {
             results.forEach((result) => {
@@ -117,21 +70,21 @@ const Feed = () => {
             });
           })
           .catch((error) =>
-            console.error("❌ One of the promises failed:", error)
+            console.error("One of the promises failed:", error)
           );
 
         setPosts(finalData);
         const suggestedRes = await fetchSuggestedUsers(userId);
         setSuggestedUsers(suggestedRes.data);
       } catch (error) {
-        console.error("❌ Error fetching data:", error);
+        console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
-  }, [userId]); // ✅ Only runs if `userId` is not null
+  }, [userId]); 
 
-  // ✅ Handle Like/Unlike
+  // Handle Like/Unlike
   const handleLike = async (postId, isLiked) => {
     try {
       if (isLiked) {
@@ -140,7 +93,6 @@ const Feed = () => {
         await likePost(postId, userId);
       }
 
-      // 🔄 Update UI instantly
       setPosts((prev) =>
         prev.map((post) =>
           post.id === postId
@@ -155,35 +107,35 @@ const Feed = () => {
         )
       );
     } catch (error) {
-      console.error("❌ Like/unlike error:", error);
+      console.error("Like/unlike error:", error);
     }
   };
 
-  // ✅ Open Comments Popup & Fetch Comments
+  // Open Comments Popup & Fetch Comments
   const handleOpenComments = async (postId) => {
     setSelectedPost(postId);
     try {
       const res = await fetchComments(postId);
       setComments(res.data);
     } catch (error) {
-      console.error("❌ Error fetching comments:", error);
+      console.error("Error fetching comments:", error);
     }
   };
 
-  // ✅ Close Comments Popup
+  // Close Comments Popup
   const handleCloseComments = () => {
     setSelectedPost(null);
     setComments([]);
     setNewComment("");
   };
 
-  // ✅ Add New Comment
+  // Add New Comment
   const handleAddComment = async () => {
     if (newComment.trim()) {
       try {
         const res = await addComment(selectedPost, userId, newComment);
 
-        // 🔄 Update UI instantly with new comment
+        // Update UI instantly with new comment
         const newCommentData = {
           id: res.data.insertId, // Assuming backend returns insertId
           username: "You",
@@ -192,7 +144,7 @@ const Feed = () => {
         setComments((prev) => [newCommentData, ...prev]);
         setNewComment("");
 
-        // 🔄 Update total comments count in post
+        // Update total comments count in post
         setPosts((prev) =>
           prev.map((post) =>
             post.id === selectedPost
@@ -201,16 +153,16 @@ const Feed = () => {
           )
         );
       } catch (error) {
-        console.error("❌ Error adding comment:", error);
+        console.error("Error adding comment:", error);
       }
     }
   };
 
-  // ✅ Follow a User & Refresh Feed
+  // Follow a User & Refresh Feed
   const handleFollow = async (followingId) => {
     await followUser(userId, followingId);
+    window.location.reload();
 
-    // 🔄 Refresh feed after following
     const updatedPosts = await fetchPosts(userId);
     setPosts(updatedPosts.data);
 
@@ -253,13 +205,14 @@ const Feed = () => {
               <Typography variant="h6">{post.username}</Typography>
               <CardMedia
                 component="img"
-                height="200"
-                image={post.image_url}
+                height="300"
+                style={{borderBottom: "1px solid black", padding: "20px 0px"}}
+                image={`http://localhost:8081${post.image_url}`}
                 alt="Post image"
               />
               <CardContent>
-                <Typography variant="body2">
-                  {post.username} : {post.content}
+                <Typography variant="body2" style={{fontSize: "18px"}}>
+                  <span style={{color: "red"}}>{post.username}</span> : {post.content}
                 </Typography>
               </CardContent>
               <CardActions>

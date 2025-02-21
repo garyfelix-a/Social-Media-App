@@ -4,18 +4,6 @@ import db from "../config/db.js";
 const router = express.Router();
 
 // Follow a user
-// router.post("/:follower:id/:following_id", (req, res) => {
-//     const { follower_id, following_id  } = req.params;
-
-//     db.query("INSERT INTO follows (follower_id, following_id) VALUES (?, ?)",
-//         [follower_id, following_id],
-//         (err, result) => {
-//             if(err) return res.status(500).json({ error: "Database Error" });
-//             res.json({ message: "Followed Successfully" });
-//         }
-//     );
-// });
-
 router.post("/", (req, res) => {
   const { follower_id, following_id } = req.body;
 

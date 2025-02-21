@@ -31,13 +31,12 @@ router.post("/create", upload.single("image"), (req, res) => {
 //Get all posts sorted by popularity (likes + comments)
 router.get("/", (req, res) => {
   const query = `
-        SELECT 
-      posts.id, posts.content, posts.user_id, 
-      COUNT(likes.id) AS total_likes 
-   FROM posts 
-   LEFT JOIN likes ON posts.id = likes.post_id 
-   GROUP BY posts.id
-    `;
+        SELECT posts.id, posts.content, posts.user_id, 
+        COUNT(likes.id) AS total_likes 
+        FROM posts 
+        LEFT JOIN likes ON posts.id = likes.post_id 
+        GROUP BY posts.id
+        `;
 
   db.query(query, (err, results) => {
     if (err) return res.status(500).json({ error: "Server Error" });
@@ -49,13 +48,15 @@ router.get("/", (req, res) => {
 router.get("/:user_id/:own_id", (req, res) => {
   const { user_id,own_id } = req.params;
 
-  const query = `SELECT posts.*, users.username, 
-(SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id) AS total_likes,
-(SELECT COUNT(*) FROM comments WHERE comments.post_id = posts.id) AS total_comments,
-EXISTS (SELECT 1 FROM likes WHERE likes.post_id = posts.id AND likes.user_id = ${own_id}) AS liked
-FROM posts
-JOIN users ON posts.user_id = users.id
-WHERE posts.user_id = ${user_id} OR posts.user_id IN (SELECT following_id FROM follows WHERE user_id = ${user_id});`;
+  const query = `
+  SELECT posts.*, users.username, 
+  (SELECT COUNT(*) FROM likes WHERE likes.post_id = posts.id) AS total_likes,
+  (SELECT COUNT(*) FROM comments WHERE comments.post_id = posts.id) AS total_comments,
+  EXISTS (SELECT 1 FROM likes WHERE likes.post_id = posts.id AND likes.user_id = ${own_id}) AS liked
+  FROM posts
+  JOIN users ON posts.user_id = users.id
+  WHERE posts.user_id = ${user_id} OR posts.user_id IN (SELECT following_id FROM follows WHERE user_id = ${user_id});
+  `;
 
   db.query(query, undefined, (err, results) => {
     if (err) return res.status(500).json({ error: err });
@@ -91,12 +92,5 @@ router.delete("/:post_id", (req, res) => {
 
 export default router;
 
-// SELECT p.id, p.content, p.image_url, u.username,
-// (SELECT COUNT(*) FROM likes WHERE post_id = p.id) AS total_likes,
-// (SELECT COUNT(*) FROM comments WHERE post_id = p.id) AS total_comments
-// FROM posts p
-// JOIN users u ON p.user_id = u.id
-// WHERE p.user_id IN (SELECT following_id FROM follows WHERE follower_id = ?)
-// ORDER BY p.id DESC;
 
 

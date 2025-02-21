@@ -13,7 +13,7 @@ router.post("/add", (req, res) => {
   }
 
   db.query(
-    "INSERT INTO comments (post_id, user_id, comment) VALUES (?, ?, ?)", // ✅ Fixed here
+    "INSERT INTO comments (post_id, user_id, comment) VALUES (?, ?, ?)", 
     [postId, userId, comment],
     (err, result) => {
       if (err) return res.status(500).json({ error: "Server Error" });
