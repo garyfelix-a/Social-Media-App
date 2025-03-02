@@ -33,6 +33,9 @@ const Navbar = () => {
           <Button className="nav-btn"  color="inherit" component={Link} to="/add-post">
             Add Post
           </Button>
+          <Button className="nav-btn"  color="inherit" component={Link} to="/surf-post">
+            Surf Posts
+          </Button>
           <Button className="nav-btn"  color="inherit" onClick={handleLogout}>
             Logout
           </Button>

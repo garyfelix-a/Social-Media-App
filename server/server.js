@@ -6,6 +6,7 @@ import path from "path";
 
 import authRoutes from "./routes/auth.js";
 import postRoutes from "./routes/posts.js";
+import surfRoutes from "./routes/surfposts.js";
 import followRoutes from "./routes/follow.js";
 import likeRoutes from "./routes/likes.js";
 import commentRoutes from "./routes/comments.js";
@@ -21,6 +22,7 @@ app.use("/uploads", express.static("uploads"));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
+app.use("/api/surfposts", surfRoutes);
 app.use("/api/follows", followRoutes);
 app.use("/api/likes", likeRoutes);
 app.use("/api/comments", commentRoutes);

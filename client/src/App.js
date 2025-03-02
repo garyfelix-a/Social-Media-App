@@ -13,6 +13,7 @@ import Feed from "./pages/Feed";
 import Navbar from "./components/Navbar";
 import { AuthProvider } from "./context/AuthContext";
 import CreatePost from "./pages/CreatePost";
+import SurfPosts from "./pages/SurfPosts";
 import Profile from "./pages/Profile";
 
 function App() {
@@ -26,6 +27,10 @@ function App() {
             <Route
               path="/add-post"
               element={<CreatePost />}
+            />
+            <Route
+              path="/surf-post"
+              element={<SurfPosts />}
             />
             <Route
               path="/profile"

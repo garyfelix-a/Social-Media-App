@@ -82,3 +82,8 @@ export const createPost = async (formData) => {
     headers: { "Content-Type": "multipart/form-data" },
   });
 };
+
+//surf posts - show all posts in one page
+export const surfPosts = async () => {
+  return await API.get("/surfposts");
+}
