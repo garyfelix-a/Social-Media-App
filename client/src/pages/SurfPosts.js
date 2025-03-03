@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import './SurfPosts.css';
 import { surfPosts } from "../services/api";
 import { Card, CardContent, CardMedia, Typography } from "@mui/material";
 const SurfPosts = () => {
