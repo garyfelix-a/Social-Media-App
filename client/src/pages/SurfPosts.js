@@ -15,7 +15,9 @@ const SurfPosts = () => {
                 console.error("Error fetching surf posts : ", error);
             }
         }
-    })
+
+        fetchData();
+    }, []);
 
     console.log(posts);
 
