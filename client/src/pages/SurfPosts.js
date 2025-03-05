@@ -1,37 +1,152 @@
-import React, { useEffect, useState } from "react";
-import './SurfPosts.css';
-import { surfPosts } from "../services/api";
-import { Card, CardContent, CardMedia, Typography } from "@mui/material";
+import React, { useContext, useEffect, useState } from "react";
+import "./SurfPosts.css";
+import {
+  fetchComments,
+  likePost,
+  surfPosts,
+  unlikePost,
+} from "../services/api";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  TextField,
+  Typography,
+} from "@mui/material";
+import {
+  ChatBubbleOutline,
+  Favorite,
+  FavoriteBorder,
+} from "@mui/icons-material";
+import AuthContext from "../context/AuthContext";
 const SurfPosts = () => {
+  let { getLoginUser } = useContext(AuthContext);
 
-    const [posts, setPosts] = useState([]);
+  let userId = getLoginUser();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res = await surfPosts();
-                setPosts(res.data);
-            } catch (error) {
-                console.error("Error fetching surf posts : ", error);
-            }
-        }
+  const [posts, setPosts] = useState([]);
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [comments, setComments] = useState([]);
 
-        fetchData();
-    }, []);
+  const handleLike = async (postId, isLiked) => {
+    try {
+      if (isLiked) {
+        await unlikePost(postId, userId);
+      } else {
+        await likePost(postId, userId);
+      }
 
-    console.log(posts);
+      setPosts((prev) =>
+        prev.map((post) =>
+          post.id === postId
+            ? {
+                ...post,
+                liked: !isLiked,
+                total_likes: isLiked
+                  ? post.total_likes - 1
+                  : post.total_likes + 1,
+              }
+            : post
+        )
+      );
+    } catch (error) {
+      console.error("Like/unlike error:", error);
+    }
+  };
 
-    return (
-        <div>
-            {posts.map((post) => (
-                <Card key={post.id}>
-                    <Typography>{post.username}</Typography>
-                    <CardMedia component="img" height="300" image={`http://localhost:8081${post.image_url}`} alt="post image" />
-                    <CardContent><Typography>{post.content}</Typography></CardContent>
-                </Card>
-            ))}
-        </div>
-    );
-}
+  // Open Comments Popup & Fetch Comments
+  const handleOpenComments = async (postId) => {
+    setSelectedPost(postId);
+    try {
+      const res = await fetchComments(postId);
+      setComments(res.data);
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await surfPosts();
+        setPosts(res.data);
+      } catch (error) {
+        console.error("Error fetching surf posts : ", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  console.log(posts);
+
+  return (
+    <div>
+      <Typography>Explore Posts</Typography>
+      {posts.map((post) => (
+        <Card key={post.id}>
+          <Typography>{post.username}</Typography>
+          <CardMedia
+            component="img"
+            height="300"
+            image={`http://localhost:8081${post.image_url}`}
+            alt="post image"
+          />
+          <CardContent>
+            <Typography>{post.content}</Typography>
+          </CardContent>
+
+          <CardActions>
+            {/* Like Button */}
+            <IconButton onClick={() => handleLike(post.id, post.liked)}>
+              {post.liked ? <Favorite color="error" /> : <FavoriteBorder />}
+            </IconButton>
+            <Typography>{post.total_likes}</Typography>
+
+            {/* Comment Button */}
+            <IconButton onClick={() => handleOpenComments(post.id)}>
+              <ChatBubbleOutline />
+            </IconButton>
+            <Typography>{post.total_comments}</Typography>
+          </CardActions>
+        </Card>
+      ))}
+
+      {/* <Dialog open={Boolean(selectedPost)} onClose={handleCloseComments}>
+        <DialogTitle>Comments</DialogTitle>
+        <DialogContent>
+          {comments.length === 0 ? (
+            <Typography>No comments yet.</Typography>
+          ) : (
+            comments.map((comment) => (
+              <Typography key={comment.id}>
+                <strong>{comment.username}:</strong> {comment.comment}
+              </Typography>
+            ))
+          )}
+
+          <TextField
+            label="Add a comment"
+            fullWidth
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            sx={{ marginTop: 2 }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleAddComment}>Post</Button>
+          <Button onClick={handleCloseComments}>Close</Button>
+        </DialogActions>
+      </Dialog> */}
+    </div>
+  );
+};
 
 export default SurfPosts;
