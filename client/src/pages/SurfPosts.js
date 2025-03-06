@@ -34,6 +34,7 @@ const SurfPosts = () => {
   const [posts, setPosts] = useState([]);
   const [selectedPost, setSelectedPost] = useState(null);
   const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState("");
 
   const handleLike = async (postId, isLiked) => {
     try {
@@ -69,6 +70,41 @@ const SurfPosts = () => {
       setComments(res.data);
     } catch (error) {
       console.error("Error fetching comments:", error);
+    }
+  };
+
+  const handleCloseComments = () => {
+    setSelectedPost(null);
+    setComments([]);
+    setNewComment("");
+  };
+
+  // Add New Comment
+  const handleAddComment = async () => {
+    if (newComment.trim()) {
+      try {
+        const res = await addComment(selectedPost, userId, newComment);
+
+        // Update UI instantly with new comment
+        const newCommentData = {
+          id: res.data.insertId, // Assuming backend returns insertId
+          username: "You",
+          comment: newComment,
+        };
+        setComments((prev) => [newCommentData, ...prev]);
+        setNewComment("");
+
+        // Update total comments count in post
+        setPosts((prev) =>
+          prev.map((post) =>
+            post.id === selectedPost
+              ? { ...post, total_comments: post.total_comments + 1 }
+              : post
+          )
+        );
+      } catch (error) {
+        console.error("Error adding comment:", error);
+      }
     }
   };
 
@@ -119,7 +155,7 @@ const SurfPosts = () => {
         </Card>
       ))}
 
-      {/* <Dialog open={Boolean(selectedPost)} onClose={handleCloseComments}>
+      <Dialog open={Boolean(selectedPost)} onClose={handleCloseComments}>
         <DialogTitle>Comments</DialogTitle>
         <DialogContent>
           {comments.length === 0 ? (
@@ -144,7 +180,7 @@ const SurfPosts = () => {
           <Button onClick={handleAddComment}>Post</Button>
           <Button onClick={handleCloseComments}>Close</Button>
         </DialogActions>
-      </Dialog> */}
+      </Dialog>
     </div>
   );
 };
