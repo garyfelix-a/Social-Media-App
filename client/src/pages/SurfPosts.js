@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./SurfPosts.css";
 import {
+  addComment,
   fetchComments,
   likePost,
   surfPosts,
