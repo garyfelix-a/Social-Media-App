@@ -27,6 +27,7 @@ import {
   FavoriteBorder,
 } from "@mui/icons-material";
 import AuthContext from "../context/AuthContext";
+import { Link } from "react-router-dom";
 const SurfPosts = () => {
   let { getLoginUser } = useContext(AuthContext);
 
@@ -125,11 +126,29 @@ const SurfPosts = () => {
   console.log(posts);
 
   return (
-    <div>
-      <Typography>Explore Posts</Typography>
+    <div className="explore-main">
+      <div className="explore-head">
+        <Typography sx={{fontSize: "18px", fontWeight: "bold"}}>Surf Posts</Typography>
+        <Typography>
+          <Button
+          className="back-btn"
+            component={Link}
+            to="/feed"
+            style={{ color: "black", textDecoration: "none", fontSize: "18px" }}
+          >
+            Back
+          </Button>
+        </Typography>
+      </div>
       {posts.map((post) => (
-        <Card key={post.id}>
-          <Typography>{post.username}</Typography>
+        <Card
+          key={post.id}
+          sx={{ margin: "20px", padding: "10px", width: "400px" }}
+          className="surf-card"
+        >
+          <Typography sx={{ fontSize: "18px" }}>
+            User: {post.username}
+          </Typography>
           <CardMedia
             component="img"
             height="300"
@@ -137,7 +156,9 @@ const SurfPosts = () => {
             alt="post image"
           />
           <CardContent>
-            <Typography>{post.content}</Typography>
+            <Typography sx={{ fontSize: "18px" }}>
+              {post.username} : {post.content}
+            </Typography>
           </CardContent>
 
           <CardActions>

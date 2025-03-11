@@ -1,0 +1,22 @@
+.explore-main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0px;
+    background: rgba(1, 11, 71, 0.25);
+}
+
+.explore-head{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 50%;
+}
+
+.back-btn{
+    border: 1px solid black;
+    color: white !important;
+    text-transform: capitalize !important;
+    background-color: black !important;
+}
