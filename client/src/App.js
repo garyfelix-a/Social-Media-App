@@ -1,5 +1,5 @@
 import "./App.css";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -17,39 +17,46 @@ import SurfPosts from "./pages/SurfPosts";
 import Profile from "./pages/Profile";
 
 function App() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <Router>
-      <AuthProvider>
-        <Routes>
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route element={<ProtectedRoute />}>
-            <Route
-              path="/add-post"
-              element={<CreatePost />}
-            />
-            <Route
-              path="/surf-post"
-              element={<SurfPosts />}
-            />
-            <Route
-              path="/profile"
-              element={<Profile />}
-            />
-            <Route
-              path="/feed"
-              element={
-                <>
-                  <Navbar />
-                  <Feed />
-                </>
-              }
-            />
-          </Route>
-          <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
-      </AuthProvider>
-    </Router>
+    <div>
+      {loading ? (
+        <h2>Loading...</h2>
+      ) : (
+        <Router>
+          <AuthProvider>
+            <Routes>
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+              <Route element={<ProtectedRoute />}>
+                <Route path="/add-post" element={<CreatePost />} />
+                <Route path="/surf-post" element={<SurfPosts />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route
+                  path="/feed"
+                  element={
+                    <>
+                      <Navbar />
+                      <Feed />
+                    </>
+                  }
+                />
+              </Route>
+              <Route path="*" element={<Navigate to="/login" />} />
+            </Routes>
+          </AuthProvider>
+        </Router>
+      )}
+    </div>
   );
 }
 
