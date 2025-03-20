@@ -16,6 +16,8 @@ import CreatePost from "./pages/CreatePost";
 import SurfPosts from "./pages/SurfPosts";
 import Profile from "./pages/Profile";
 
+import loading from "./assets/loading.gif";
+
 function App() {
   const [loading, setLoading] = useState(true);
 
@@ -30,7 +32,8 @@ function App() {
   return (
     <div>
       {loading ? (
-        <h2>Loading...</h2>
+        // <h2>Loading...</h2>
+        <img src={require('./assets/loading.gif')} alt="loading screen" style={{position: "absolute", top: "0", bottom: "0", left: "0", right: "0", margin: "auto"}} width={250}/>
       ) : (
         <Router>
           <AuthProvider>
